@@ -1,0 +1,27 @@
+* {
+	box-sizing: border-box;
+}
+.pettxt {
+	word-wrap: break-word;
+}
+.sign {
+	display: none;
+}
+img {
+	height: 150px;
+	width: 150px;
+}
+
+.petition,
+.petitioner,
+.textdiv,
+.Formdiv,
+.Main {
+	text-align: center;
+	font-size: 15px;
+	font-family: Georgia;
+}
+canvas {
+	border: 1px solid red;
+	margin-top: 20px;
+}
