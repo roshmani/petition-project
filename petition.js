@@ -1,19 +1,34 @@
 const {
 	saveUserSigned,
 	getUsersSigned,
-	getNumUsers
+	getNumUsers,
+	getSignature
 } = require("./petitiondbservice");
 const express = require("express");
+const csurf = require("csurf");
+const cookieSession = require("cookie-session");
 const app = express();
+const hb = require("express-handlebars");
+app.engine("handlebars", hb());
+app.set("view engine", "handlebars");
 app.use(require("cookie-parser")());
+app.disable("x-powered-by");
 app.use(
 	require("body-parser").urlencoded({
 		extended: false
 	})
 ); // used in POST requests
-const hb = require("express-handlebars");
-app.engine("handlebars", hb());
-app.set("view engine", "handlebars");
+app.use(
+	cookieSession({
+		secret: `Highly Confidential`,
+		maxAge: 1000 * 60 * 60 * 24 * 14
+	})
+);
+app.use(csurf());
+app.use((request, response, next) => {
+	response.locals.csrfToken = request.csrfToken();
+	next();
+});
 /***********************************************************************/
 app.use(express.static("static"));
 
@@ -21,12 +36,17 @@ app.get("/petition", function(request, response) {
 	response.render("petitionMain");
 });
 
-app.get("/petition/signed", function(request, response, next) {
-	//checkforCookies(request, response, next);
-	getNumUsers()
-		.then(function(numSigners) {
+app.get("/petition/signed", checkforSigid, function(request, response, next) {
+	let signId = 0;
+	if (request.session.signId) {
+		signId = request.session.signId;
+	}
+
+	Promise.all([getNumUsers(), getSignature(signId)])
+		.then(function(results) {
 			response.render("Signed", {
-				numSigners: numSigners.rows[0].count
+				numSigners: results[0].rows[0].count,
+				signature: results[1].rows[0].sign
 			});
 		})
 		.catch(function(err) {
@@ -34,8 +54,7 @@ app.get("/petition/signed", function(request, response, next) {
 		});
 });
 
-app.get("/petition/signers", function(request, response, next) {
-	//checkforCookies(request, response, next);
+app.get("/petition/signers", checkforSigid, function(request, response, next) {
 	getUsersSigned()
 		.then(function(petitioners) {
 			response.render("signers", {
@@ -54,8 +73,9 @@ app.post("/petition", (request, response) => {
 			request.body.lname,
 			request.body.sign
 		)
-			.then(function() {
-				response.cookie("signed", true);
+			.then(function(sign) {
+				request.session.signId = sign.rows[0].id;
+				console.log("signature id", sign.rows[0].id);
 				response.redirect("/petition/signed");
 			})
 			.catch(function(err) {
@@ -66,8 +86,8 @@ app.post("/petition", (request, response) => {
 	}
 });
 
-function checkforCookies(request, response, next) {
-	if (!request.cookies.signed && request.url != "/petition") {
+function checkforSigid(request, response, next) {
+	if (!request.session.signId && request.url != "/petition") {
 		response.redirect("/petition");
 	} else {
 		next();
