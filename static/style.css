@@ -12,6 +12,7 @@ img {
 	width: 150px;
 }
 
+.signdisplay,
 .petition,
 .petitioner,
 .textdiv,
@@ -24,4 +25,9 @@ img {
 canvas {
 	border: 1px solid red;
 	margin-top: 20px;
+}
+
+.signdisplay {
+	margin-top: 20px;
+	border: 1px solid red;
 }

@@ -9,7 +9,7 @@
     <div class="Main">
       <div class="petition">
         <p class='pettxt'>Sign our petition to make smoking in public places like bus-stops, U bahn stations, Tram Stops a criminal act in every jurisdiction</p>
-        <img src="no_smoking.png" alt='nosmoking'/>
+        <img src="/no_smoking.png" alt='nosmoking'/>
       </div>
       <div class="Message">
         {{>ErrorMsg}}
@@ -18,8 +18,9 @@
         <form class="userdetails" method="post">
           <label>First Name:<input type="text" name="fname"></label>
           <label>Last Name :<input type="text" name="lname"></label>
-          <input id="sign" type="text" name="sign">
+          <input id="sign" type="hidden" name="sign">
           <canvas id="signcanvas" width="300" height="50"></canvas>
+          <input type="hidden" name="_csrf" value="{{csrfToken}}">
           <button type="submit" name="submitbtn">Submit</button>
         </form>
       </div>

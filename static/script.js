@@ -40,6 +40,6 @@ signCanvas.addEventListener(
 function drawSign() {
 	ctx.lineTo(mouseX, mouseY);
 	ctx.stroke();
+	dataURL = signCanvas.toDataURL();
+	signInput.value = dataURL;
 }
-dataURL = signCanvas.toDataURL();
-signInput.value = dataURL;
