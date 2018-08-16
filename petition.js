@@ -32,16 +32,12 @@ app.use((request, response, next) => {
 /***********************************************************************/
 app.use(express.static("static"));
 
-app.get("/petition", function(request, response) {
+app.get("/petition", checkforSigned, function(request, response) {
 	response.render("petitionMain");
 });
 
 app.get("/petition/signed", checkforSigid, function(request, response, next) {
-	let signId = 0;
-	if (request.session.signId) {
-		signId = request.session.signId;
-	}
-
+	const signId = request.session.signId;
 	Promise.all([getNumUsers(), getSignature(signId)])
 		.then(function(results) {
 			response.render("Signed", {
@@ -75,7 +71,6 @@ app.post("/petition", (request, response) => {
 		)
 			.then(function(sign) {
 				request.session.signId = sign.rows[0].id;
-				console.log("signature id", sign.rows[0].id);
 				response.redirect("/petition/signed");
 			})
 			.catch(function(err) {
@@ -89,6 +84,15 @@ app.post("/petition", (request, response) => {
 function checkforSigid(request, response, next) {
 	if (!request.session.signId && request.url != "/petition") {
 		response.redirect("/petition");
+	} else {
+		next();
+	}
+}
+
+function checkforSigned(request, response, next) {
+	if (request.session.signId && request.url != "/petition/signed") {
+		console.log("in petition check");
+		response.redirect("/petition/signed");
 	} else {
 		next();
 	}
