@@ -1,7 +1,8 @@
 * {
 	box-sizing: border-box;
 }
-.pettxt {
+.pettxt,
+.regtxt {
 	word-wrap: break-word;
 }
 .sign {
@@ -11,7 +12,10 @@ img {
 	height: 150px;
 	width: 150px;
 }
-
+.signimg {
+	height: 100px;
+	width: 100px;
+}
 .signdisplay,
 .petition,
 .petitioner,

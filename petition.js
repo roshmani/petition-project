@@ -2,8 +2,11 @@ const {
 	saveUserSigned,
 	getUsersSigned,
 	getNumUsers,
-	getSignature
+	getSignature,
+	regUsers,
+	checkEmail
 } = require("./petitiondbservice");
+const { checkPass, hashPass } = require("./PwdEncryption");
 const express = require("express");
 const csurf = require("csurf");
 const cookieSession = require("cookie-session");
@@ -32,11 +35,27 @@ app.use((request, response, next) => {
 /***********************************************************************/
 app.use(express.static("static"));
 
-app.get("/petition", checkforSigned, function(request, response) {
+/*Route for calling registration page*/
+app.get("/register", function(request, response) {
+	response.render("register");
+});
+
+app.get("/login", function(request, response) {
+	response.render("login");
+});
+
+app.get("/petition", checkforSigned, checkforUserId, function(
+	request,
+	response
+) {
 	response.render("petitionMain");
 });
 
-app.get("/petition/signed", checkforSigid, function(request, response, next) {
+app.get("/petition/signed", checkforSigid, checkforUserId, function(
+	request,
+	response,
+	next
+) {
 	const signId = request.session.signId;
 	Promise.all([getNumUsers(), getSignature(signId)])
 		.then(function(results) {
@@ -47,10 +66,15 @@ app.get("/petition/signed", checkforSigid, function(request, response, next) {
 		})
 		.catch(function(err) {
 			console.log("Error occured:", err);
+			response.status(500);
 		});
 });
 
-app.get("/petition/signers", checkforSigid, function(request, response, next) {
+app.get("/petition/signers", checkforSigid, checkforUserId, function(
+	request,
+	response,
+	next
+) {
 	getUsersSigned()
 		.then(function(petitioners) {
 			response.render("signers", {
@@ -62,12 +86,75 @@ app.get("/petition/signers", checkforSigid, function(request, response, next) {
 		});
 });
 
+app.post("/register", (request, response) => {
+	if (
+		request.body.fname &&
+		request.body.lname &&
+		request.body.emailid &&
+		request.body.passwd
+	) {
+		hashPass(request.body.passwd)
+			.then(function(hashedpwd) {
+				return regUsers(
+					request.body.fname,
+					request.body.lname,
+					request.body.emailid,
+					hashedpwd
+				);
+			})
+			.then(function(userid) {
+				request.session.userId = userid.rows[0].id;
+				response.redirect("/petition");
+			})
+			.catch(function(err) {
+				console.log("Error occured:", err);
+				response.status(500);
+			});
+	} else {
+		response.render("register", { err: true });
+	}
+});
+
+app.post("/login", (request, response) => {
+	let idval;
+	if (request.body.emailid && request.body.pswd) {
+		checkEmail(request.body.emailid)
+			.then(function(results) {
+				if (results.rows.length > 0) {
+					idval = results.rows[0].id;
+					return checkPass(
+						request.body.pswd,
+						results.rows[0].password
+					);
+				} else {
+					throw new Error();
+				}
+			})
+			.then(function(match) {
+				if (match) {
+					request.session.userId = idval;
+					response.redirect("/petition");
+				} else {
+					throw new Error();
+				}
+			})
+			.catch(function(err) {
+				console.log("Error occured:", err);
+				response.render("login", { err: true });
+			});
+	} else {
+		response.render("login", { err: true });
+	}
+});
+
 app.post("/petition", (request, response) => {
 	if (request.body.fname && request.body.lname && request.body.sign) {
+		let userid = request.session.userId;
 		saveUserSigned(
 			request.body.fname,
 			request.body.lname,
-			request.body.sign
+			request.body.sign,
+			userid
 		)
 			.then(function(sign) {
 				request.session.signId = sign.rows[0].id;
@@ -75,6 +162,7 @@ app.post("/petition", (request, response) => {
 			})
 			.catch(function(err) {
 				console.log("Error occured:", err);
+				response.status(500);
 			});
 	} else {
 		response.render("petitionMain", { err: true });
@@ -82,7 +170,7 @@ app.post("/petition", (request, response) => {
 });
 
 function checkforSigid(request, response, next) {
-	if (!request.session.signId && request.url != "/petition") {
+	if (!request.session.signId) {
 		response.redirect("/petition");
 	} else {
 		next();
@@ -90,9 +178,16 @@ function checkforSigid(request, response, next) {
 }
 
 function checkforSigned(request, response, next) {
-	if (request.session.signId && request.url != "/petition/signed") {
-		console.log("in petition check");
+	if (request.session.signId) {
 		response.redirect("/petition/signed");
+	} else {
+		next();
+	}
+}
+
+function checkforUserId(request, response, next) {
+	if (!request.session.userId) {
+		response.redirect("/register");
 	} else {
 		next();
 	}
