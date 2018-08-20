@@ -1,0 +1,15 @@
+<div class="Main">
+    <div class="textdiv">
+      <img src="/no_smoking.png" alt='nosmoking'/>
+      <p class='pettxt'>Now please tell us just a little bit more about yourself.</p>
+    </div>
+    <div class="Formdiv">
+      <form class="profiledetails" method="post">
+        <label for="age">Age:<input type="text" name="age"></label>
+        <label for="city">City:<input type="text" name="city"></label>
+        <label for="homepage">Homepage:<input type="text" name="homepage"></label>
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <button type="submit" name="continuebtn">Continue</button>
+      </form>
+    </div>
+</div>

@@ -4,7 +4,8 @@ const {
 	getNumUsers,
 	getSignature,
 	regUsers,
-	checkEmail
+	checkEmail,
+	userProfile
 } = require("./petitiondbservice");
 const { checkPass, hashPass } = require("./PwdEncryption");
 const express = require("express");
@@ -42,6 +43,10 @@ app.get("/home", function(request, response) {
 /*Route for calling registration page*/
 app.get("/register", function(request, response) {
 	response.render("register", { layout: "main" });
+});
+/*Route for calling profile*/
+app.get("/profile", function(request, response) {
+	response.render("profile", { layout: "main" });
 });
 
 app.get("/login", function(request, response) {
@@ -110,7 +115,7 @@ app.post("/register", (request, response) => {
 			})
 			.then(function(userid) {
 				request.session.userId = userid.rows[0].id;
-				response.redirect("/petition");
+				response.redirect("/profile");
 			})
 			.catch(function(err) {
 				console.log("Error occured:", err);
@@ -152,7 +157,24 @@ app.post("/login", (request, response) => {
 		response.render("login", { err: true, layout: "main" });
 	}
 });
+/**********************************************************************/
+app.post("/profile", (request, response) => {
+	userProfile(
+		request.body.age,
+		request.body.city,
+		request.body.homepage,
+		request.session.userId
+	)
+		.then(function() {
+			response.redirect("/petition");
+		})
+		.catch(function(err) {
+			console.log("Error occured:", err);
+			response.render("profile", { err: true, layout: "main" });
+		});
+});
 
+/**********************************************************************/
 app.post("/petition", (request, response) => {
 	if (request.body.fname && request.body.lname && request.body.sign) {
 		let userid = request.session.userId;
