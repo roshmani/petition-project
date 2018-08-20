@@ -15,9 +15,7 @@
         {{>ErrorMsg}}
       </div>
       <div class="Formdiv">
-        <form class="userdetails" method="post">
-          <label for="fname">First Name:</label><input type="text" name="fname">
-          <label for="lname">Last Name :</label><input type="text" name="lname">
+        <form class="userdetails" method="post">          
           <input id="sign" type="hidden" name="sign">
           <label for="signcanvas">Sign here:</label><canvas name="signcanvas" id="signcanvas" width="300" height="50"></canvas>
           <input type="hidden" name="_csrf" value="{{csrfToken}}">

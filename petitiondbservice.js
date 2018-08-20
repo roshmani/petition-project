@@ -2,23 +2,18 @@ var spicedpg = require("spiced-pg");
 
 var db = spicedpg("postgres:postgres:postgres@localhost:5432/petition");
 
-module.exports.saveUserSigned = function(fname, lname, signature, userid) {
-	var query = `INSERT INTO signatures(fname,lname,sign,user_id) VALUES($1,$2,$3,$4) RETURNING id`;
+module.exports.saveUserSigned = function(signature, userid) {
+	var query = `INSERT INTO signatures(sign,user_id) VALUES($1,$2) RETURNING id`;
 
-	return db.query(query, [
-		fname || null,
-		lname || null,
-		signature || null,
-		userid || null
-	]);
+	return db.query(query, [signature || null, userid || null]);
 };
 
 module.exports.getUsersSigned = function() {
 	var query = `
-	SELECT signatures.fname, signatures.lname, user_profiles.age, user_profiles.city, user_profiles.url
-	FROM signatures
+	SELECT users.fname, users.lname, user_profiles.age, user_profiles.city, user_profiles.url
+	FROM users
 	JOIN user_profiles
-	ON signatures.user_id=user_profiles.user_id`;
+	ON users.id=user_profiles.user_id`;
 	return db.query(query);
 };
 
@@ -49,10 +44,10 @@ module.exports.checkEmail = function(emailid) {
 };
 
 module.exports.selectPetitioners = function(city) {
-	var query = `SELECT signatures.fname, signatures.lname, user_profiles.age,user_profiles.url
-	FROM signatures
+	var query = `SELECT users.fname, users.lname, user_profiles.age,user_profiles.url
+	FROM users
 	JOIN user_profiles
-	ON signatures.user_id=user_profiles.user_id
+	ON users.id=user_profiles.user_id
 	WHERE user_profiles.city=$1`;
 	return db.query(query, [city]);
 };

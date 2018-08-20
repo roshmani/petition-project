@@ -180,10 +180,14 @@ app.post("/login", (request, response) => {
 });
 /**********************************************************************/
 app.post("/profile", (request, response) => {
+	let url = request.body.homepage;
+	if (!url.startsWith("https://")) {
+		url = "https://" + url;
+	}
 	userProfile(
 		request.body.age,
 		request.body.city,
-		request.body.homepage,
+		url,
 		request.session.userId
 	)
 		.then(function() {
@@ -197,14 +201,9 @@ app.post("/profile", (request, response) => {
 
 /**********************************************************************/
 app.post("/petition", (request, response) => {
-	if (request.body.fname && request.body.lname && request.body.sign) {
+	if (request.body.sign) {
 		let userid = request.session.userId;
-		saveUserSigned(
-			request.body.fname,
-			request.body.lname,
-			request.body.sign,
-			userid
-		)
+		saveUserSigned(request.body.sign, userid)
 			.then(function(sign) {
 				request.session.signId = sign.rows[0].id;
 				response.redirect("/petition/signed");
