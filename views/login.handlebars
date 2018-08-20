@@ -1,27 +1,17 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Petition!</title>
-    <link rel="stylesheet" href="/style.css" type="text/css">
-  </head>
-  <body>
-    <div class="Main">
-      <div class="login">
-        <img src="/no_smoking.png" alt='nosmoking'/>
-        <p class='logintext'>Please Sign In</p>
-      </div>
-      <div class="Formdiv">
-        <form class="logindetails" method="post">
-          <label>Email Address:<input type="text" name="emailid"></label>
-          <label>Password :<input type="text" name="pswd"></label>
-          <input type="hidden" name="_csrf" value="{{csrfToken}}">
-          <button type="submit" name="signinbtn">Sign In</button>
-        </form>
-      </div>
-      <div class="Message">
-        {{>ErrorMsg}}
-      </div>
-    </div>
-  </body>
-</html>
+<div class="Main">
+  <div class="login">
+    <img src="/no_smoking.png" alt='nosmoking'/>
+    <p class='logintext'>Please Sign In</p>
+  </div>
+  <div class="Formdiv">
+    <form class="logindetails" method="post">
+      <label>Email Address:<input type="text" name="emailid"></label>
+      <label>Password :<input type="text" name="pswd"></label>
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <button type="submit" name="signinbtn">Sign In</button>
+    </form>
+  </div>
+  <div class="Message">
+    {{>ErrorMsg}}
+  </div>
+</div>

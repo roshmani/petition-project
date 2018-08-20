@@ -35,20 +35,24 @@ app.use((request, response, next) => {
 /***********************************************************************/
 app.use(express.static("static"));
 
+app.get("/home", function(request, response) {
+	response.render("home", { layout: "main" });
+});
+
 /*Route for calling registration page*/
 app.get("/register", function(request, response) {
-	response.render("register");
+	response.render("register", { layout: "main" });
 });
 
 app.get("/login", function(request, response) {
-	response.render("login");
+	response.render("login", { layout: "main" });
 });
 
 app.get("/petition", checkforSigned, checkforUserId, function(
 	request,
 	response
 ) {
-	response.render("petitionMain");
+	response.render("petitionMain", { layout: "main" });
 });
 
 app.get("/petition/signed", checkforSigid, checkforUserId, function(
@@ -61,7 +65,8 @@ app.get("/petition/signed", checkforSigid, checkforUserId, function(
 		.then(function(results) {
 			response.render("Signed", {
 				numSigners: results[0].rows[0].count,
-				signature: results[1].rows[0].sign
+				signature: results[1].rows[0].sign,
+				layout: "main"
 			});
 		})
 		.catch(function(err) {
@@ -78,7 +83,8 @@ app.get("/petition/signers", checkforSigid, checkforUserId, function(
 	getUsersSigned()
 		.then(function(petitioners) {
 			response.render("signers", {
-				petitioners: petitioners.rows
+				petitioners: petitioners.rows,
+				layout: "main"
 			});
 		})
 		.catch(function(err) {
@@ -111,7 +117,7 @@ app.post("/register", (request, response) => {
 				response.status(500);
 			});
 	} else {
-		response.render("register", { err: true });
+		response.render("register", { err: true, layout: "main" });
 	}
 });
 
@@ -140,10 +146,10 @@ app.post("/login", (request, response) => {
 			})
 			.catch(function(err) {
 				console.log("Error occured:", err);
-				response.render("login", { err: true });
+				response.render("login", { err: true, layout: "main" });
 			});
 	} else {
-		response.render("login", { err: true });
+		response.render("login", { err: true, layout: "main" });
 	}
 });
 
@@ -165,7 +171,7 @@ app.post("/petition", (request, response) => {
 				response.status(500);
 			});
 	} else {
-		response.render("petitionMain", { err: true });
+		response.render("petitionMain", { err: true, layout: "main" });
 	}
 });
 

@@ -1,32 +1,22 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Petition!</title>
-    <link rel="stylesheet" href="/style.css" type="text/css">
-  </head>
-  <body>
-    <div class="Main">
-      <div class="register">
-        <img src="/no_smoking.png" alt='nosmoking'/>
-        <p class='regtxt'>Make the air around you Smoke free! Lets join hands to breath fresh air. Join our campaign today! </p>
-      </div>
-      <div class="Formdiv">
-        <form class="userdetails" method="post">
-          <label>First Name:<input type="text" name="fname"></label>
-          <label>Last Name :<input type="text" name="lname"></label>
-          <label>Email Adress:<input type="text" name="emailid"></label>
-          <label>Password :<input type="password" name="passwd"></label>
-          <input type="hidden" name="_csrf" value="{{csrfToken}}">
-          <button type="submit" name="signupbtn">Sign Up</button>
-        </form>
-      </div>
-      <div class="Message">
-        {{>ErrorMsg}}
-      </div>
-      <div class="loginlink">
-        <p><em>If you are already a member, <a href="/login">Please Login.</a></em></p>
-      </div>
-    </div>
-  </body>
-</html>
+<div class="Main">
+  <div class="register">
+    <img src="/no_smoking.png" alt='nosmoking'/>
+    <p class='regtxt'>Make the air around you Smoke free! Lets join hands to breath fresh air. Join our campaign today! </p>
+  </div>
+  <div class="Formdiv">
+    <form class="userdetails" method="post">
+      <label>First Name:<input type="text" name="fname"></label>
+      <label>Last Name :<input type="text" name="lname"></label>
+      <label>Email Adress:<input type="text" name="emailid"></label>
+      <label>Password :<input type="password" name="passwd"></label>
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <button type="submit" name="signupbtn">Sign Up</button>
+    </form>
+  </div>
+  <div class="Message">
+    {{>ErrorMsg}}
+  </div>
+  <div class="loginlink">
+    <p><em>If you are already a member, <a href="/login">Please Login.</a></em></p>
+  </div>
+</div>

@@ -1,6 +1,82 @@
 * {
 	box-sizing: border-box;
 }
+
+html,
+body {
+	margin: 0px;
+	padding: 0px;
+	min-height: 100%;
+	height: 100%;
+}
+.maincontainer {
+	min-height: 100%;
+	height: auto !important;
+	margin-bottom: -15px; /* the bottom margin is the negative value of the footer's total height */
+}
+.maincontainer:after {
+	content: "";
+	display: block;
+	height: 15px; /* the footer's total height */
+}
+header {
+	padding: 10px;
+	height: 65px;
+	width: 100%;
+	background-color: grey;
+}
+.navbar {
+	float: right;
+	list-style: none;
+	text-align: center;
+	padding: 0;
+	margin: 0;
+}
+.nav li {
+	font-family: "Courier new", sans-serif;
+	font-size: 1.2em;
+	line-height: 35px;
+	height: 35px;
+	float: left;
+	padding: 10px;
+	margin-right: 10px;
+}
+
+.nav a {
+	text-decoration: none;
+	color: #fff;
+	display: block;
+	transition: 0.3s background-color;
+	text-align: left;
+}
+
+.nav a:hover {
+	background-color: #a9a9a9;
+}
+
+.nav a.active {
+	background-color: #fff;
+	color: #444;
+	cursor: default;
+}
+
+.textmain {
+	padding: 7em;
+	padding-bottom: 7em;
+	margin-bottom: 7em;
+}
+.footer {
+	height: 15px;
+}
+
+#footer-content {
+	background-color: grey;
+	color: white;
+	height: 15px; /* height + top/bottom paddding + top/bottom border must add up to footer height */
+	padding: 17px;
+	line-height: 0.5;
+}
+
 .pettxt,
 .regtxt {
 	word-wrap: break-word;
@@ -16,6 +92,8 @@ img {
 	height: 100px;
 	width: 100px;
 }
+
+.hometxt,
 .signdisplay,
 .petition,
 .petitioner,
@@ -23,7 +101,7 @@ img {
 .Formdiv,
 .Main {
 	text-align: center;
-	font-size: 15px;
+	font-size: 20px;
 	font-family: Georgia;
 }
 canvas {
@@ -34,4 +112,12 @@ canvas {
 .signdisplay {
 	margin-top: 20px;
 	border: 1px solid red;
+}
+
+.hometxt {
+	margin-top: 25%;
+}
+
+.Main {
+	margin-top: 10%;
 }
