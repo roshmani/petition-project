@@ -1,3 +1,26 @@
-{{#each petitioners}}
-       <p>{{fname}} {{lname}}</p>
-{{/each}}
+{{#if cityflag}}
+  {{#each petitioners}}
+    <p>
+      {{#if url}}<a href="{{url}}" target="_blank">
+       {{fname}} {{lname}}</a>
+      {{else}}
+       {{fname}} {{lname}}
+      {{/if}}
+      {{age}}
+    </p>
+  {{/each}}
+{{else}}
+  {{#each petitioners}}
+         <p>
+           {{#if url}}<a href="{{url}}" target="_blank">
+            {{fname}} {{lname}}</a>
+           {{else}}
+            {{fname}} {{lname}}
+           {{/if}}
+           {{age}}
+           {{#if city}}
+            <a href="/petition/signers/{{city}}">{{city}}</a>
+           {{/if}}
+         </p>
+  {{/each}}
+{{/if}}

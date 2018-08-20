@@ -3,7 +3,7 @@ var spicedpg = require("spiced-pg");
 var db = spicedpg("postgres:postgres:postgres@localhost:5432/petition");
 
 module.exports.saveUserSigned = function(fname, lname, signature, userid) {
-	var query = `INSERT INTO Signatures(fname,lname,sign,user_id) VALUES($1,$2,$3,$4) RETURNING id`;
+	var query = `INSERT INTO signatures(fname,lname,sign,user_id) VALUES($1,$2,$3,$4) RETURNING id`;
 
 	return db.query(query, [
 		fname || null,
@@ -14,17 +14,21 @@ module.exports.saveUserSigned = function(fname, lname, signature, userid) {
 };
 
 module.exports.getUsersSigned = function() {
-	var query = `SELECT FNAME,LNAME FROM Signatures`;
+	var query = `
+	SELECT signatures.fname, signatures.lname, user_profiles.age, user_profiles.city, user_profiles.url
+	FROM signatures
+	JOIN user_profiles
+	ON signatures.user_id=user_profiles.user_id`;
 	return db.query(query);
 };
 
 module.exports.getNumUsers = function() {
-	var query = `SELECT COUNT(*) FROM Signatures`;
+	var query = `SELECT COUNT(*) FROM signatures`;
 	return db.query(query);
 };
 
 module.exports.getSignature = function(signId) {
-	var query = `SELECT sign FROM Signatures WHERE id=$1`;
+	var query = `SELECT sign FROM signatures WHERE id=$1`;
 	return db.query(query, [signId]);
 };
 
@@ -42,4 +46,24 @@ module.exports.regUsers = function(fname, lname, email, password) {
 module.exports.checkEmail = function(emailid) {
 	var query = `SELECT * FROM users WHERE email=$1`;
 	return db.query(query, [emailid]);
+};
+
+module.exports.selectPetitioners = function(city) {
+	var query = `SELECT signatures.fname, signatures.lname, user_profiles.age,user_profiles.url
+	FROM signatures
+	JOIN user_profiles
+	ON signatures.user_id=user_profiles.user_id
+	WHERE user_profiles.city=$1`;
+	return db.query(query, [city]);
+};
+
+module.exports.userProfile = function(age, city, homepage, userid) {
+	var query = `INSERT INTO user_profiles(age,city,url,user_id) VALUES($1,$2,$3,$4)`;
+
+	return db.query(query, [
+		age || null,
+		city || null,
+		homepage || null,
+		userid
+	]);
 };

@@ -5,7 +5,8 @@ const {
 	getSignature,
 	regUsers,
 	checkEmail,
-	userProfile
+	userProfile,
+	selectPetitioners
 } = require("./petitiondbservice");
 const { checkPass, hashPass } = require("./PwdEncryption");
 const express = require("express");
@@ -89,7 +90,8 @@ app.get("/petition/signers", checkforSigid, checkforUserId, function(
 		.then(function(petitioners) {
 			response.render("signers", {
 				petitioners: petitioners.rows,
-				layout: "main"
+				layout: "main",
+				cityflag: false
 			});
 		})
 		.catch(function(err) {
@@ -97,6 +99,25 @@ app.get("/petition/signers", checkforSigid, checkforUserId, function(
 		});
 });
 
+app.get("/petition/signers/:city", checkforSigid, checkforUserId, function(
+	request,
+	response
+) {
+	let city = request.params.city;
+	selectPetitioners(city)
+		.then(function(petitioners) {
+			response.render("signers", {
+				petitioners: petitioners.rows,
+				layout: "main",
+				cityflag: true
+			});
+		})
+		.catch(function(err) {
+			console.log("Error occured:", err);
+		});
+});
+
+/**************************************************************************/
 app.post("/register", (request, response) => {
 	if (
 		request.body.fname &&

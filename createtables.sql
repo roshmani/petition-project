@@ -1,26 +1,26 @@
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id SERIAL primary key,
-    FNAME VARCHAR(255) not null,
-    LNAME VARCHAR(255) not null,
+    fname VARCHAR(255) not null,
+    lname VARCHAR(255) not null,
     email VARCHAR(255) not null UNIQUE,
     password  VARCHAR(255) not NULL
 );
 
 DROP TABLE IF EXISTS user_profiles;
 CREATE TABLE user_profiles (
-    profid SERIAL primary key,
-    AGE INTEGER DEFAULT 0,
-    CITY VARCHAR(255),
-    URL VARCHAR(255),
+    id SERIAL primary key,
+    age INTEGER,
+    city VARCHAR(255),
+    url VARCHAR(255),
     user_id INTEGER REFERENCES users(id)
 );
 
-DROP TABLE IF EXISTS Signatures;
-CREATE TABLE Signatures (
+DROP TABLE IF EXISTS signatures;
+CREATE TABLE signatures (
     id SERIAL primary key,
-    FNAME VARCHAR(255) not null,
-    LNAME VARCHAR(255) not null,
-    SIGN TEXT not null,
+    fname VARCHAR(255) not null,
+    lname VARCHAR(255) not null,
+    sign TEXT not null,
     user_id INTEGER REFERENCES users(id)
 );
