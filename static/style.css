@@ -121,3 +121,22 @@ canvas {
 .Main {
 	margin-top: 10%;
 }
+.deletelink {
+	color: blue;
+	background: none;
+	margin: 0;
+	padding: 0;
+	border: none;
+	cursor: pointer;
+	overflow: visible;
+	width: auto;
+	font-size: 20px;
+}
+
+.deletelink span {
+	text-decoration: underline;
+}
+.delelink:hover span,
+.delelink:focus span {
+	color: black;
+}

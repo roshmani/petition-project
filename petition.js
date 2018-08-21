@@ -7,7 +7,10 @@ const {
 	checkEmail,
 	userProfile,
 	selectPetitioners,
-	getUserDetails
+	getUserDetails,
+	updateUserTable,
+	updateUserprofileTable,
+	deleteSignature
 } = require("./petitiondbservice");
 const { checkPass, hashPass } = require("./PwdEncryption");
 const express = require("express");
@@ -83,9 +86,9 @@ app.get("/petition/signed", checkforSigid, checkforUserId, function(
 });
 
 app.get("/profile/edit", function(request, response) {
-	const signId = request.session.signId;
-	console.log("signid", signId);
-	getUserDetails(signId)
+	const userId = request.session.userId;
+	console.log("signid", userId);
+	getUserDetails(userId)
 		.then(function(userdetails) {
 			console.log("det:", userdetails.rows);
 			response.render("profileEdit", {
@@ -231,7 +234,57 @@ app.post("/petition", (request, response) => {
 	}
 });
 /***************************************************************************/
-app.post("/profile/Edit", (request, response) => {});
+app.post("/profile/Edit", (request, response) => {
+	const userId = request.session.userId;
+	const { fname, lname, emailid, passwd, age, city, url } = request.body;
+	if (!url.startsWith("https://")) {
+		url = "https://" + url;
+	}
+	if (passwd) {
+		hashPass(passwd)
+			.then(function(hashedpwd) {
+				/*call function to update with the new hash*/
+				Promise.all([
+					updateUserTable(fname, lname, emailid, userId, hashedpwd),
+					updateUserprofileTable(age, city, url, userId)
+				])
+					.then(function() {
+						response.redirect("/petition/signed");
+					})
+					.catch(function(err) {
+						console.log("Error occured in db query:", err);
+					});
+			})
+			.catch(function(err) {
+				console.log("Error occured in hashing password:", err);
+			});
+	} else {
+		/*call function to update without pwd*/
+		Promise.all([
+			updateUserTable(fname, lname, emailid, userId),
+			updateUserprofileTable(age, city, url, userId)
+		])
+			.then(function() {
+				response.redirect("/petition/signed");
+			})
+			.catch(function(err) {
+				console.log("Error occured in db query:", err);
+			});
+	}
+});
+/***************************************************************************/
+app.post("/delete", (request, response) => {
+	const signId = request.session.signId;
+	deleteSignature(signId)
+		.then(function() {
+			request.session.signId = null;
+			response.redirect("/petition");
+		})
+		.catch(function(err) {
+			console.log("Error occured on delete:", err);
+		});
+});
+
 /**********************************middle wares*****************************/
 function checkforSigid(request, response, next) {
 	if (!request.session.signId) {

@@ -10,8 +10,8 @@
     <div class="Message">
       <p><a href='/petition/signers'>See all {{numSigners}} Signers</a></p>
       <p><a href='/profile/edit'>Edit your profile</a></p>
-      <form class="deletelink" method="post">
-        <p><a href='/petition/signed/delete'>Delete your Signature</a></p>
+      <form class="deletelink" action='/delete' method="post">
+        <p><button type="submit" class="deletelink"><span>Delete your Signature</span></button></p>
         <input type="hidden" name="_csrf" value="{{csrfToken}}">
       </form>
     </div>

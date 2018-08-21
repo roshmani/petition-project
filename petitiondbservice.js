@@ -78,3 +78,41 @@ module.exports.userProfile = function(age, city, homepage, userid) {
 		userid
 	]);
 };
+
+module.exports.updateUserTable = function(fname, lname, email, id, password) {
+	if (password) {
+		var query = `UPDATE users SET fname=$1,lname=$2,
+		email=$3,password=$5 WHERE id=$4`;
+		return db.query(query, [
+			fname || null,
+			lname || null,
+			email || null,
+			id,
+			password || null
+		]);
+	} else {
+		var query = `UPDATE users SET fname=$1,lname=$2,
+		email=$3 WHERE id=$4`;
+		return db.query(query, [
+			fname || null,
+			lname || null,
+			email || null,
+			id
+		]);
+	}
+	return db.query(query, [fname || null, lname || null, email || null, id]);
+};
+
+module.exports.updateUserprofileTable = function(age, city, url, userid) {
+	var query = `INSERT INTO user_profiles(age,city,url,user_id)
+		VALUES($1,$2,$3,$4)
+		ON CONFLICT (user_id)
+		DO UPDATE SET age=$1,city=$2,url=$3`;
+
+	return db.query(query, [age || null, city || null, url || null, userid]);
+};
+
+module.exports.deleteSignature = function(signid) {
+	var query = `DELETE FROM signatures where user_id=$1`;
+	return db.query(query, [signid]);
+};
