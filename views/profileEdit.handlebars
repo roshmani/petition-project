@@ -1,0 +1,22 @@
+<div class="Main">
+  <div class="editProfile">
+    <img src="/no_smoking.png" alt='nosmoking'/>
+    <p class='edittxt'>Edit your profile.</p>
+  </div>
+  <div class="Formdiv">
+    <form class="edituserdetails" method="post">
+      <label>First Name:<input type="text" name="fname" value="{{userdetails.fname}}"></label>
+      <label>Last Name :<input type="text" name="lname" value="{{userdetails.lname}}"></label>
+      <label>Email Adress:<input type="text" name="emailid" value="{{userdetails.email}}"></label>
+      <label>Password :<input  type="password" name="passwd"></label>
+      <label>Age:<input type="text" name="age" value="{{userdetails.age}}"></label>
+      <label>City:<input type="text" name="city" value="{{userdetails.city}}"></label>
+      <label>Home Page:<input  type="text" name="url" value="{{userdetails.url}}"></label>
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+      <button type="submit" name="updatebtn">Update</button>
+    </form>
+  </div>
+  <div class="Message">
+    {{>ErrorMsg}}
+  </div>
+</div>

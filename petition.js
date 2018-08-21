@@ -6,7 +6,8 @@ const {
 	regUsers,
 	checkEmail,
 	userProfile,
-	selectPetitioners
+	selectPetitioners,
+	getUserDetails
 } = require("./petitiondbservice");
 const { checkPass, hashPass } = require("./PwdEncryption");
 const express = require("express");
@@ -34,31 +35,32 @@ app.use((request, response, next) => {
 	response.locals.csrfToken = request.csrfToken();
 	next();
 });
+app.engine("handlebars", hb({ defaultLayout: "main" }));
 /***********************************************************************/
 app.use(express.static("static"));
 
 app.get("/home", function(request, response) {
-	response.render("home", { layout: "main" });
+	response.render("home");
 });
 
 /*Route for calling registration page*/
 app.get("/register", function(request, response) {
-	response.render("register", { layout: "main" });
+	response.render("register");
 });
 /*Route for calling profile*/
 app.get("/profile", function(request, response) {
-	response.render("profile", { layout: "main" });
+	response.render("profile");
 });
 
 app.get("/login", function(request, response) {
-	response.render("login", { layout: "main" });
+	response.render("login");
 });
 
 app.get("/petition", checkforSigned, checkforUserId, function(
 	request,
 	response
 ) {
-	response.render("petitionMain", { layout: "main" });
+	response.render("petitionMain");
 });
 
 app.get("/petition/signed", checkforSigid, checkforUserId, function(
@@ -71,13 +73,27 @@ app.get("/petition/signed", checkforSigid, checkforUserId, function(
 		.then(function(results) {
 			response.render("Signed", {
 				numSigners: results[0].rows[0].count,
-				signature: results[1].rows[0].sign,
-				layout: "main"
+				signature: results[1].rows[0].sign
 			});
 		})
 		.catch(function(err) {
 			console.log("Error occured:", err);
 			response.status(500);
+		});
+});
+
+app.get("/profile/edit", function(request, response) {
+	const signId = request.session.signId;
+	console.log("signid", signId);
+	getUserDetails(signId)
+		.then(function(userdetails) {
+			console.log("det:", userdetails.rows);
+			response.render("profileEdit", {
+				userdetails: userdetails.rows[0]
+			});
+		})
+		.catch(function(err) {
+			console.log("Error occured:", err);
 		});
 });
 
@@ -90,7 +106,6 @@ app.get("/petition/signers", checkforSigid, checkforUserId, function(
 		.then(function(petitioners) {
 			response.render("signers", {
 				petitioners: petitioners.rows,
-				layout: "main",
 				cityflag: false
 			});
 		})
@@ -108,7 +123,6 @@ app.get("/petition/signers/:city", checkforSigid, checkforUserId, function(
 		.then(function(petitioners) {
 			response.render("signers", {
 				petitioners: petitioners.rows,
-				layout: "main",
 				cityflag: true
 			});
 		})
@@ -143,10 +157,10 @@ app.post("/register", (request, response) => {
 				response.status(500);
 			});
 	} else {
-		response.render("register", { err: true, layout: "main" });
+		response.render("register", { err: true });
 	}
 });
-
+/******************************************************************************/
 app.post("/login", (request, response) => {
 	let idval;
 	if (request.body.emailid && request.body.pswd) {
@@ -172,10 +186,10 @@ app.post("/login", (request, response) => {
 			})
 			.catch(function(err) {
 				console.log("Error occured:", err);
-				response.render("login", { err: true, layout: "main" });
+				response.render("login", { err: true });
 			});
 	} else {
-		response.render("login", { err: true, layout: "main" });
+		response.render("login", { err: true });
 	}
 });
 /**********************************************************************/
@@ -195,7 +209,7 @@ app.post("/profile", (request, response) => {
 		})
 		.catch(function(err) {
 			console.log("Error occured:", err);
-			response.render("profile", { err: true, layout: "main" });
+			response.render("profile", { err: true });
 		});
 });
 
@@ -213,10 +227,12 @@ app.post("/petition", (request, response) => {
 				response.status(500);
 			});
 	} else {
-		response.render("petitionMain", { err: true, layout: "main" });
+		response.render("petitionMain", { err: true });
 	}
 });
-
+/***************************************************************************/
+app.post("/profile/Edit", (request, response) => {});
+/**********************************middle wares*****************************/
 function checkforSigid(request, response, next) {
 	if (!request.session.signId) {
 		response.redirect("/petition");

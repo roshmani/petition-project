@@ -7,21 +7,21 @@
   </head>
   <body>
     <div class="Main">
-      <div class="petition">
-        <p class='pettxt'>Sign our petition to make smoking in public places like bus-stops, U bahn stations, Tram Stops a criminal act in every jurisdiction</p>
-        <img src="/no_smoking.png" alt='nosmoking'/>
-      </div>
-      <div class="Message">
-        {{>ErrorMsg}}
-      </div>
-      <div class="Formdiv">
-        <form class="userdetails" method="post">          
-          <input id="sign" type="hidden" name="sign">
-          <label for="signcanvas">Sign here:</label><canvas name="signcanvas" id="signcanvas" width="300" height="50"></canvas>
-          <input type="hidden" name="_csrf" value="{{csrfToken}}">
-          <button type="submit" name="submitbtn">Submit</button>
-        </form>
-      </div>
+        <div class="petition">
+            <p class='pettxt'>Sign our petition to make smoking in public places like bus-stops, U bahn stations, Tram Stops a criminal act in every jurisdiction</p>
+            <img src="/no_smoking.png" alt='nosmoking'/>
+        </div>
+        <div class="Message">
+            {{>ErrorMsg}}
+        </div>
+        <div class="Formdiv">
+            <form class="userdetails" method="post">
+                <input id="sign" type="hidden" name="sign">
+                <label for="signcanvas">Sign here:</label><canvas name="signcanvas" id="signcanvas" width="300" height="50"></canvas>
+                <input type="hidden" name="_csrf" value="{{csrfToken}}">
+                <button type="submit" name="submitbtn">Submit</button>
+            </form>
+        </div>
     </div>
     <script src="script.js"></script>
   </body>

@@ -3,14 +3,16 @@ var spicedpg = require("spiced-pg");
 var db = spicedpg("postgres:postgres:postgres@localhost:5432/petition");
 
 module.exports.saveUserSigned = function(signature, userid) {
-	var query = `INSERT INTO signatures(sign,user_id) VALUES($1,$2) RETURNING id`;
+	var query = `INSERT INTO signatures(sign,user_id) VALUES($1,$2)
+	RETURNING id`;
 
 	return db.query(query, [signature || null, userid || null]);
 };
 
 module.exports.getUsersSigned = function() {
 	var query = `
-	SELECT users.fname, users.lname, user_profiles.age, user_profiles.city, user_profiles.url
+	SELECT users.fname, users.lname, user_profiles.age, user_profiles.city,
+	user_profiles.url
 	FROM user_profiles
 	JOIN users
 	ON users.id=user_profiles.user_id
@@ -30,7 +32,8 @@ module.exports.getSignature = function(signId) {
 };
 
 module.exports.regUsers = function(fname, lname, email, password) {
-	var query = `INSERT INTO users(fname,lname,email,password) VALUES($1,$2,$3,$4) RETURNING id`;
+	var query = `INSERT INTO users(fname,lname,email,password)
+	VALUES($1,$2,$3,$4) RETURNING id`;
 
 	return db.query(query, [
 		fname || null,
@@ -46,7 +49,8 @@ module.exports.checkEmail = function(emailid) {
 };
 
 module.exports.selectPetitioners = function(city) {
-	var query = `SELECT users.fname, users.lname, user_profiles.age,user_profiles.url
+	var query = `SELECT users.fname, users.lname,
+	user_profiles.age,user_profiles.url
 	FROM users
 	JOIN user_profiles
 	ON users.id=user_profiles.user_id
@@ -54,9 +58,19 @@ module.exports.selectPetitioners = function(city) {
 	return db.query(query, [city]);
 };
 
-module.exports.userProfile = function(age, city, homepage, userid) {
-	var query = `INSERT INTO user_profiles(age,city,url,user_id) VALUES($1,$2,$3,$4)`;
+module.exports.getUserDetails = function(userid) {
+	var query = `SELECT users.fname, users.lname,users.email,
+	user_profiles.age,user_profiles.city,user_profiles.url
+	FROM users
+	JOIN user_profiles
+	ON users.id=user_profiles.user_id
+	WHERE users.id=$1`;
+	return db.query(query, [userid]);
+};
 
+module.exports.userProfile = function(age, city, homepage, userid) {
+	var query = `INSERT INTO user_profiles(age,city,url,user_id)
+	VALUES($1,$2,$3,$4)`;
 	return db.query(query, [
 		age || null,
 		city || null,
