@@ -11,9 +11,11 @@ module.exports.saveUserSigned = function(signature, userid) {
 module.exports.getUsersSigned = function() {
 	var query = `
 	SELECT users.fname, users.lname, user_profiles.age, user_profiles.city, user_profiles.url
-	FROM users
-	JOIN user_profiles
-	ON users.id=user_profiles.user_id`;
+	FROM user_profiles
+	JOIN users
+	ON users.id=user_profiles.user_id
+  JOIN signatures
+  ON users.id=signatures.user_id`;
 	return db.query(query);
 };
 
