@@ -10,7 +10,8 @@ const {
 	getUserDetails,
 	updateUserTable,
 	updateUserprofileTable,
-	deleteSignature
+	deleteSignature,
+	getSignedUserId
 } = require("./petitiondbservice");
 let secret;
 if (process.env.secret) {
@@ -51,20 +52,25 @@ app.engine("handlebars", hb({ defaultLayout: "main" }));
 app.use(express.static("static"));
 
 app.get("/", function(request, response) {
-	response.render("home");
+	response.render("home", { header: true });
 });
 
 /*Route for calling registration page*/
 app.get("/register", function(request, response) {
-	response.render("register");
+	response.render("register", { header: true });
 });
 /*Route for calling profile*/
 app.get("/profile", function(request, response) {
-	response.render("profile");
+	response.render("profile", { header: false });
 });
 
 app.get("/login", function(request, response) {
-	response.render("login");
+	response.render("login", { header: false });
+});
+
+app.get("/logout", function(request, response) {
+	request.session = null;
+	response.redirect("/");
 });
 
 app.get("/petition", checkforSigned, checkforUserId, function(
@@ -192,7 +198,20 @@ app.post("/login", (request, response) => {
 			.then(function(match) {
 				if (match) {
 					request.session.userId = idval;
-					response.redirect("/petition");
+					/*get id for the sign if already signed*/
+					getSignedUserId(idval)
+						.then(function(results) {
+							if (results.rows.length > 0) {
+								request.session.signId = results.rows[0].id;
+								response.redirect("/petition/signed");
+							} else {
+								response.redirect("/petition");
+							}
+						})
+						.catch(function(err) {
+							console.log("Error occured in login:", err);
+							response.render("login", { err: true });
+						});
 				} else {
 					throw new Error();
 				}
@@ -236,7 +255,7 @@ app.post("/petition", (request, response) => {
 				response.redirect("/petition/signed");
 			})
 			.catch(function(err) {
-				console.log("Error occured:", err);
+				console.log("Error occured in the petition signed:", err);
 				response.status(500);
 			});
 	} else {

@@ -37,6 +37,11 @@ module.exports.getSignature = function(signId) {
 	return db.query(query, [signId]);
 };
 
+module.exports.getSignedUserId = function(userId) {
+	var query = `SELECT id FROM signatures WHERE user_id=$1`;
+	return db.query(query, [userId]);
+};
+
 module.exports.regUsers = function(fname, lname, email, password) {
 	var query = `INSERT INTO users(fname,lname,email,password)
 	VALUES($1,$2,$3,$4) RETURNING id`;
