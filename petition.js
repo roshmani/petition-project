@@ -50,7 +50,7 @@ app.engine("handlebars", hb({ defaultLayout: "main" }));
 /***********************************************************************/
 app.use(express.static("static"));
 
-app.get("/home", function(request, response) {
+app.get("/", function(request, response) {
 	response.render("home");
 });
 
