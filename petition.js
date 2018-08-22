@@ -12,6 +12,7 @@ const {
 	updateUserprofileTable,
 	deleteSignature
 } = require("./petitiondbservice");
+const { secret } = require("./secrets.json");
 const { checkPass, hashPass } = require("./PwdEncryption");
 const express = require("express");
 const csurf = require("csurf");
@@ -29,7 +30,7 @@ app.use(
 ); // used in POST requests
 app.use(
 	cookieSession({
-		secret: `Highly Confidential`,
+		secret: secret,
 		maxAge: 1000 * 60 * 60 * 24 * 14
 	})
 );
@@ -80,7 +81,10 @@ app.get("/petition/signed", checkforSigid, checkforUserId, function(
 			});
 		})
 		.catch(function(err) {
-			console.log("Error occured:", err);
+			console.log(
+				"Error occured in db query to getusers and signatures:",
+				err
+			);
 			response.status(500);
 		});
 });
@@ -90,13 +94,12 @@ app.get("/profile/edit", function(request, response) {
 	console.log("signid", userId);
 	getUserDetails(userId)
 		.then(function(userdetails) {
-			console.log("det:", userdetails.rows);
 			response.render("profileEdit", {
 				userdetails: userdetails.rows[0]
 			});
 		})
 		.catch(function(err) {
-			console.log("Error occured:", err);
+			console.log("Error occured in edit profile query:", err);
 		});
 });
 
@@ -113,7 +116,7 @@ app.get("/petition/signers", checkforSigid, checkforUserId, function(
 			});
 		})
 		.catch(function(err) {
-			console.log("Error occured:", err);
+			console.log("Error occured in getting signed users:", err);
 		});
 });
 
@@ -130,7 +133,7 @@ app.get("/petition/signers/:city", checkforSigid, checkforUserId, function(
 			});
 		})
 		.catch(function(err) {
-			console.log("Error occured:", err);
+			console.log("Error occured in gettting signer based on city:", err);
 		});
 });
 
@@ -156,7 +159,7 @@ app.post("/register", (request, response) => {
 				response.redirect("/profile");
 			})
 			.catch(function(err) {
-				console.log("Error occured:", err);
+				console.log("Error occured in register:", err);
 				response.status(500);
 			});
 	} else {
@@ -188,7 +191,7 @@ app.post("/login", (request, response) => {
 				}
 			})
 			.catch(function(err) {
-				console.log("Error occured:", err);
+				console.log("Error occured in login:", err);
 				response.render("login", { err: true });
 			});
 	} else {
@@ -211,7 +214,7 @@ app.post("/profile", (request, response) => {
 			response.redirect("/petition");
 		})
 		.catch(function(err) {
-			console.log("Error occured:", err);
+			console.log("Error occured in insert profile:", err);
 			response.render("profile", { err: true });
 		});
 });
@@ -276,9 +279,14 @@ app.post("/profile/Edit", (request, response) => {
 app.post("/delete", (request, response) => {
 	const signId = request.session.signId;
 	deleteSignature(signId)
-		.then(function() {
-			request.session.signId = null;
-			response.redirect("/petition");
+		.then(function(results) {
+			console.log("RR:", results);
+			if (results.rows.length > 0) {
+				request.session.signId = null;
+				response.redirect("/petition");
+			} else {
+				throw new Error();
+			}
 		})
 		.catch(function(err) {
 			console.log("Error occured on delete:", err);
@@ -310,4 +318,6 @@ function checkforUserId(request, response, next) {
 	}
 }
 /**********************************************************************/
-app.listen(8080, () => console.log("listening on port 8080..."));
+app.listen(process.env.PORT || 8080, () =>
+	console.log("listening on port 8080...")
+);
