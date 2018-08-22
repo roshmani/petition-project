@@ -12,7 +12,13 @@ const {
 	updateUserprofileTable,
 	deleteSignature
 } = require("./petitiondbservice");
-const { secret } = require("./secrets.json");
+let secret;
+if (process.env.secret) {
+	secret = process.env.secret;
+} else {
+	const { secret } = require("./secrets.json");
+}
+
 const { checkPass, hashPass } = require("./PwdEncryption");
 const express = require("express");
 const csurf = require("csurf");

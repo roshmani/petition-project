@@ -1,9 +1,12 @@
 var spicedpg = require("spiced-pg");
 
-var db = spicedpg(
-	process.env.DATABASE_URL ||
-		"postgres:postgres:postgres@localhost:5432/petition"
-);
+let db;
+if (process.env.DATABASE_URL) {
+	db = spicedpg(process.env.DATABASE_URL);
+} else {
+	const { dbURL } = require("./secrets.JSON");
+	db = spicedpg(dbURL);
+}
 
 module.exports.saveUserSigned = function(signature, userid) {
 	var query = `INSERT INTO signatures(sign,user_id) VALUES($1,$2)
