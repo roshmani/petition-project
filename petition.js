@@ -287,13 +287,8 @@ app.post("/delete", (request, response) => {
 	const signId = request.session.signId;
 	deleteSignature(signId)
 		.then(function(results) {
-			console.log("RR:", results);
-			if (results.rows.length > 0) {
-				request.session.signId = null;
-				response.redirect("/petition");
-			} else {
-				throw new Error();
-			}
+			request.session.signId = null;
+			response.redirect("/petition");
 		})
 		.catch(function(err) {
 			console.log("Error occured on delete:", err);

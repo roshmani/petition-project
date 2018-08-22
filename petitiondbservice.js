@@ -119,6 +119,6 @@ module.exports.updateUserprofileTable = function(age, city, url, userid) {
 };
 
 module.exports.deleteSignature = function(signid) {
-	var query = `DELETE FROM signatures where user_id=$1`;
+	var query = `DELETE FROM signatures WHERE id=$1`;
 	return db.query(query, [signid]);
 };
