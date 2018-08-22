@@ -1,13 +1,13 @@
 var spicedpg = require("spiced-pg");
 
-let db;
+let dbURL;
 if (process.env.DATABASE_URL) {
-	db = spicedpg(process.env.DATABASE_URL);
+	dbURL = process.env.DATABASE_URL;
 } else {
-	const { dbURL } = require("./secrets.JSON");
-	db = spicedpg(dbURL);
+	const secrets = require("./secrets.json");
+	dbURL = secrets.dbURL;
 }
-
+const db = spicedpg(dbURL);
 module.exports.saveUserSigned = function(signature, userid) {
 	var query = `INSERT INTO signatures(sign,user_id) VALUES($1,$2)
 	RETURNING id`;

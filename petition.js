@@ -16,7 +16,8 @@ let secret;
 if (process.env.secret) {
 	secret = process.env.secret;
 } else {
-	const { secret } = require("./secrets.json");
+	const secrets = require("./secrets.json");
+	secret = secrets.secret;
 }
 
 const { checkPass, hashPass } = require("./PwdEncryption");
