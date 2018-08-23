@@ -12,6 +12,7 @@ let mouseX = 0,
 signCanvas.addEventListener(
 	"mousemove",
 	function(e) {
+		console.log("in move");
 		e.stopPropagation();
 		mouseX = e.pageX - this.offsetLeft;
 		mouseY = e.pageY - this.offsetTop;
@@ -22,6 +23,7 @@ signCanvas.addEventListener(
 signCanvas.addEventListener(
 	"mousedown",
 	function(e) {
+		console.log("in down");
 		ctx.beginPath();
 		ctx.moveTo(mouseX, mouseY);
 		signCanvas.addEventListener("mousemove", drawSign, false);
@@ -42,4 +44,5 @@ function drawSign() {
 	ctx.stroke();
 	dataURL = signCanvas.toDataURL();
 	signInput.value = dataURL;
+	console.log("sign", dataURL);
 }

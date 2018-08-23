@@ -65,7 +65,7 @@ app.get("/profile", function(request, response) {
 });
 
 app.get("/login", function(request, response) {
-	response.render("login", { header: false });
+	response.render("login", { header: true });
 });
 
 app.get("/logout", function(request, response) {

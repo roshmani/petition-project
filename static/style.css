@@ -99,7 +99,6 @@ img {
 }
 .signimg {
 	height: 100px;
-	width: 100px;
 }
 
 .hometxt,
@@ -121,8 +120,10 @@ canvas {
 }
 
 .signdisplay {
-	margin-top: 20px;
-	border: 1px solid red;
+	margin-top: 5%;
+	border: 3px solid #669999;
+	margin-left: 40%;
+	width: 300px;
 }
 .hometxtdiv {
 	margin-top: -20px;
@@ -134,8 +135,8 @@ canvas {
 	background-size: 100%;
 	background-position: center;
 	background-repeat: no-repeat;
-	height: 500px;
-	bottom: 15px;
+	height: 470px;
+	margin-bottom: -15px;
 	padding-top: 1px;
 }
 .hometxt {
@@ -151,9 +152,6 @@ canvas {
 	font-size: 30px;
 }
 
-.Main {
-	margin-top: 10%;
-}
 .deletelink {
 	color: blue;
 	background: none;
@@ -197,30 +195,33 @@ label {
 	margin: 10px;
 }
 
-input[type="submit"],
-input[type="button"],
-input[type="text"],
-input[type="email"],
+.Formdiv button[type="submit"],
+.Formdiv input[type="text"],
+.Formdiv input[type="email"],
 label {
 	font-size: 16px;
-	color: #fff;
 }
 
-button[type="submit"] {
+.Formdiv button[type="submit"] {
 	background: #576e86;
 	border: none;
 	padding: 8px 10px 8px 10px;
 	border-radius: 5px;
 	color: #a8bace;
 }
-button[type="submit"]:hover {
+.Formdiv button[type="submit"]:hover {
 	background: #394d61;
 }
 
 .RegMain {
 	position: relative;
 	background-color: #aed6f1;
-	margin-bottom: -15px;
-	min-height: 100%;
+	margin-bottom: -20px;
+	min-height: 100vh;
 	height: auto !important;
+}
+
+.Main {
+	background-color: #aed6f1;
+	height: 100vh;
 }
