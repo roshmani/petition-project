@@ -8,6 +8,8 @@ if (process.env.DATABASE_URL) {
 	dbURL = secrets.dbURL;
 }
 const db = spicedpg(dbURL);
+
+/*Function which adds the sign and the user id in signatures table*/
 module.exports.saveUserSigned = function(signature, userid) {
 	var query = `INSERT INTO signatures(sign,user_id) VALUES($1,$2)
 	RETURNING id`;

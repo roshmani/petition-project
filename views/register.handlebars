@@ -1,13 +1,13 @@
-<div class="Main">
+<div class="RegMain">
   <div class="register">
-    <img src="/no_smoking.png" alt='nosmoking'/>
-    <p class='regtxt'>Make the air around you Smoke free! Lets join hands to breath fresh air. Join our campaign today! </p>
+    <img class="topimg" src="/no_smoking.png" alt='nosmoking'/>
+    <p class='regtxt'>Youth smokers are recruited to become smokers seeing smoking in the movies! Lets join hands to stop smoking scenes in kids and teens movies. Join our campaign today! </p>
   </div>
   <div class="Formdiv">
     <form class="userdetails" method="post">
       <label>First Name:<input type="text" name="fname"></label>
       <label>Last Name :<input type="text" name="lname"></label>
-      <label>Email Adress:<input type="text" name="emailid"></label>
+      <label>Email Adress:<input type="email" name="emailid"></label>
       <label>Password :<input type="password" name="passwd"></label>
       <input type="hidden" name="_csrf" value="{{csrfToken}}">
       <button type="submit" name="signupbtn">Sign Up</button>

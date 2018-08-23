@@ -10,6 +10,7 @@ body {
 	height: 100%;
 }
 .maincontainer {
+	display: block;
 	min-height: 100%;
 	height: auto !important;
 	margin-bottom: -15px; /* the bottom margin is the negative value of the footer's total height */
@@ -24,6 +25,14 @@ header {
 	height: 65px;
 	width: 100%;
 	background-color: grey;
+}
+#logo {
+	position: absolute;
+	display: inline-block;
+}
+#logoimg {
+	height: 50px;
+	width: 50px;
 }
 .navbar {
 	float: right;
@@ -86,7 +95,7 @@ header {
 }
 img {
 	height: 150px;
-	width: 150px;
+	width: 300px;
 }
 .signimg {
 	height: 100px;
@@ -94,15 +103,17 @@ img {
 }
 
 .hometxt,
+.hometxtdiv,
 .signdisplay,
 .petition,
 .petitioner,
 .textdiv,
 .Formdiv,
+.RegMain,
 .Main {
 	text-align: center;
 	font-size: 20px;
-	font-family: Georgia;
+	font-family: Verdana;
 }
 canvas {
 	border: 1px solid red;
@@ -113,9 +124,31 @@ canvas {
 	margin-top: 20px;
 	border: 1px solid red;
 }
-
+.hometxtdiv {
+	margin-top: -20px;
+	height: 250px;
+	background-color: orange;
+}
+.homeimagediv {
+	background-image: url("kids.jpg");
+	background-size: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	height: 500px;
+	bottom: 15px;
+	padding-top: 1px;
+}
 .hometxt {
-	margin-top: 15%;
+	padding: 10%;
+	font-family: Impact;
+}
+.homeimagetxt {
+	padding-top: 15%;
+	padding-left: 10px;
+	font-family: Impact;
+	text-align: left;
+	word-wrap: break-word;
+	font-size: 30px;
 }
 
 .Main {
@@ -139,4 +172,55 @@ canvas {
 .delelink:hover span,
 .delelink:focus span {
 	color: black;
+}
+.copyright {
+	position: fixed;
+	font-size: 12px;
+	color: white;
+	margin-top: 165px;
+}
+.Formdiv {
+	margin-top: 5%;
+	margin-left: 35%;
+	max-width: 500px;
+	background: #669999;
+	padding: 30px 30px 15px 30px;
+	border: 5px solid #53687e;
+	border-radius: 5px;
+}
+.topimg {
+	margin-top: 2%;
+	margin-left: 5%;
+}
+label {
+	display: block;
+	margin: 10px;
+}
+
+input[type="submit"],
+input[type="button"],
+input[type="text"],
+input[type="email"],
+label {
+	font-size: 16px;
+	color: #fff;
+}
+
+button[type="submit"] {
+	background: #576e86;
+	border: none;
+	padding: 8px 10px 8px 10px;
+	border-radius: 5px;
+	color: #a8bace;
+}
+button[type="submit"]:hover {
+	background: #394d61;
+}
+
+.RegMain {
+	position: relative;
+	background-color: #aed6f1;
+	margin-bottom: -15px;
+	min-height: 100%;
+	height: auto !important;
 }
