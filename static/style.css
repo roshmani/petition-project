@@ -22,7 +22,7 @@ body {
 }
 header {
 	padding: 10px;
-	height: 65px;
+	height: 100px;
 	width: 100%;
 	background-color: grey;
 }
@@ -31,8 +31,8 @@ header {
 	display: inline-block;
 }
 #logoimg {
-	height: 50px;
-	width: 50px;
+	height: 80px;
+	width: 80px;
 }
 .navbar {
 	float: right;
@@ -43,11 +43,11 @@ header {
 }
 .nav li {
 	font-family: "Courier new", sans-serif;
-	font-size: 1.2em;
+	font-size: 1.5em;
 	line-height: 35px;
 	height: 35px;
 	float: left;
-	padding: 10px;
+	padding: 12px;
 	margin-right: 10px;
 }
 
@@ -115,10 +115,19 @@ img {
 	font-family: Verdana;
 }
 canvas {
-	border: 1px solid red;
-	margin-top: 20px;
+	border: 3px solid #669999;
+	margin-top: 5%;
 }
 
+.CanvasFormdiv {
+	margin-top: 5%;
+	margin-left: 40%;
+}
+.CanvasFormdiv button {
+	display: block;
+	margin-left: 10%;
+	margin-top: 2%;
+}
 .signdisplay {
 	margin-top: 5%;
 	border: 3px solid #669999;
@@ -126,8 +135,8 @@ canvas {
 	width: 300px;
 }
 .hometxtdiv {
-	margin-top: -20px;
-	height: 250px;
+	margin-top: -25px;
+	height: 100px;
 	background-color: orange;
 }
 .homeimagediv {
@@ -135,13 +144,14 @@ canvas {
 	background-size: 100%;
 	background-position: center;
 	background-repeat: no-repeat;
-	height: 470px;
+	height: 650px;
 	margin-bottom: -15px;
 	padding-top: 1px;
 }
 .hometxt {
-	padding: 10%;
+	padding: 50px;
 	font-family: Impact;
+	font-size: 25px;
 }
 .homeimagetxt {
 	padding-top: 15%;
@@ -193,23 +203,26 @@ canvas {
 label {
 	display: block;
 	margin: 10px;
+	font-size: 20px;
+}
+
+button[type="submit"],
+.Formdiv input[type="text"],
+.Formdiv input[type="email"],
+.Formdiv label {
+	font-size: 20px;
 }
 
 .Formdiv button[type="submit"],
-.Formdiv input[type="text"],
-.Formdiv input[type="email"],
-label {
-	font-size: 16px;
-}
-
-.Formdiv button[type="submit"] {
+.CanvasFormdiv button[type="submit"] {
 	background: #576e86;
 	border: none;
 	padding: 8px 10px 8px 10px;
 	border-radius: 5px;
 	color: #a8bace;
 }
-.Formdiv button[type="submit"]:hover {
+.Formdiv button[type="submit"]:hover,
+.CanvasFormdiv button[type="submit"]:hover {
 	background: #394d61;
 }
 
@@ -221,7 +234,17 @@ label {
 	height: auto !important;
 }
 
-.Main {
+.Main,
+.PetitionMain {
 	background-color: #aed6f1;
 	height: 100vh;
+}
+.PetitionMain {
+	margin-top: -85px;
+}
+.petition {
+	margin-top: 5%;
+}
+.pettxt {
+	padding-top: 10px;
 }

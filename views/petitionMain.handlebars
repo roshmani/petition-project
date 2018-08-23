@@ -1,28 +1,19 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Petition!</title>
-    <link rel="stylesheet" href="/style.css" type="text/css">
-  </head>
-  <body>
-    <div class="Main">
-        <div class="petition">
-            <p class='pettxt'> Sign our petition to make Smoking in movies for kids and Teens a criminal act in every part of the world! Hey Parents, you've got our backs right?</p>
-            <img src="/no_smoking.png" alt='nosmoking'/>
-        </div>
-        <div class="Message">
-            {{>ErrorMsg}}
-        </div>
-        <div class="CanvasFormdiv">
-            <form class="userdetails" method="post">
-                <input id="sign" type="hidden" name="sign">
-                <label for="signcanvas">Sign here:</label><canvas name="signcanvas" id="signcanvas" width="300" height="50"></canvas>
-                <input type="hidden" name="_csrf" value="{{csrfToken}}">
-                <button type="submit" name="submitbtn">Submit</button>
-            </form>
-        </div>
+
+<div class="PetitionMain">
+    <div class="petition">
+        <p class='pettxt'> Sign our petition to make Smoking in movies for kids and Teens a criminal act in every part of the world! Hey Parents, you've got our backs right?</p>
+        <img src="/no_smoking.png" alt='nosmoking'/>
     </div>
-    <script src="script.js"></script>
-  </body>
-</html>
+    <div class="ErrMessage">
+        {{>ErrorMsg}}
+    </div>
+    <div class="CanvasFormdiv">
+        <form class="userdetails" method="post">
+            <input id="sign" type="hidden" name="sign">
+            <label for="signcanvas">Sign here:</label><canvas name="signcanvas" id="signcanvas" width="300" height="50"></canvas>
+            <input type="hidden" name="_csrf" value="{{csrfToken}}">
+            <button type="submit" name="submitbtn">Submit</button>
+        </form>
+    </div>
+</div>
+<script src="script.js"></script>

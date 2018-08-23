@@ -173,7 +173,7 @@ app.post("/register", (request, response) => {
 			})
 			.catch(function(err) {
 				console.log("Error occured in register:", err);
-				response.status(500);
+				response.render("register", { err: true });
 			});
 	} else {
 		response.render("register", { err: true });
