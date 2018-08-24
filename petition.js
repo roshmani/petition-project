@@ -98,7 +98,6 @@ app.get("/petition/signed", checkforSigid, checkforUserId, function(
 				"Error occured in db query to getusers and signatures:",
 				err
 			);
-			response.status(500);
 		});
 });
 
@@ -267,6 +266,16 @@ app.post("/profile/Edit", (request, response) => {
 	const userId = request.session.userId;
 	let newurl;
 	const { fname, lname, emailid, passwd, age, city, url } = request.body;
+	/*to reload form on error handling*/
+	let formVal = {
+            fname: request.body.fname,
+            lname: request.body.lname,
+            email:request.body.emailid,
+						passwd:request.body.passwd,
+						age:request.body.age,
+						city:request.body.city,
+						url:request.body.url
+  };
 	if (!url.startsWith("https://") && url.length > 0) {
 		newurl = "https://" + url;
 	} else {
@@ -285,6 +294,7 @@ app.post("/profile/Edit", (request, response) => {
 					})
 					.catch(function(err) {
 						console.log("Error occured in db query:", err);
+						response.render("profileEdit", { err: true ,userdetails:formVal});
 					});
 			})
 			.catch(function(err) {
@@ -301,6 +311,7 @@ app.post("/profile/Edit", (request, response) => {
 			})
 			.catch(function(err) {
 				console.log("Error occured in db query:", err);
+				response.render("profileEdit", { err: true,userdetails:formVal });
 			});
 	}
 });
