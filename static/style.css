@@ -102,6 +102,7 @@ img {
 }
 
 .hometxt,
+.introtxt,
 .hometxtdiv,
 .signdisplay,
 .petition,
@@ -162,6 +163,15 @@ canvas {
 	font-size: 30px;
 }
 
+.introtxt {
+	padding-left: 10px;
+	font-family: Georgia;
+	font-size: 25px;
+	font-style: italic;
+}
+.intro {
+	font-weight: bold;
+}
 .deletelink {
 	color: blue;
 	background: none;

@@ -227,7 +227,7 @@ app.post("/login", (request, response) => {
 /**********************************************************************/
 app.post("/profile", (request, response) => {
 	let url = request.body.homepage;
-	if (!url.startsWith("https://")) {
+	if (!url.startsWith("https://") && url.length > 0) {
 		url = "https://" + url;
 	}
 	userProfile(
@@ -265,9 +265,12 @@ app.post("/petition", (request, response) => {
 /***************************************************************************/
 app.post("/profile/Edit", (request, response) => {
 	const userId = request.session.userId;
+	let newurl;
 	const { fname, lname, emailid, passwd, age, city, url } = request.body;
-	if (!url.startsWith("https://")) {
-		url = "https://" + url;
+	if (!url.startsWith("https://") && url.length > 0) {
+		newurl = "https://" + url;
+	} else {
+		newurl = url;
 	}
 	if (passwd) {
 		hashPass(passwd)
@@ -275,7 +278,7 @@ app.post("/profile/Edit", (request, response) => {
 				/*call function to update with the new hash*/
 				Promise.all([
 					updateUserTable(fname, lname, emailid, userId, hashedpwd),
-					updateUserprofileTable(age, city, url, userId)
+					updateUserprofileTable(age, city, newurl, userId)
 				])
 					.then(function() {
 						response.redirect("/petition/signed");
@@ -291,7 +294,7 @@ app.post("/profile/Edit", (request, response) => {
 		/*call function to update without pwd*/
 		Promise.all([
 			updateUserTable(fname, lname, emailid, userId),
-			updateUserprofileTable(age, city, url, userId)
+			updateUserprofileTable(age, city, newurl, userId)
 		])
 			.then(function() {
 				response.redirect("/petition/signed");
