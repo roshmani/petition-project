@@ -13,6 +13,8 @@ const {
 	deleteSignature,
 	getSignedUserId
 } = require("./petitiondbservice");
+
+/* Getting secret key for cookie parser either from file or conf.var in heroku*/
 let secret;
 if (process.env.secret) {
 	secret = process.env.secret;
@@ -20,7 +22,6 @@ if (process.env.secret) {
 	const secrets = require("./secrets.json");
 	secret = secrets.secret;
 }
-
 const { checkPass, hashPass } = require("./PwdEncryption");
 const express = require("express");
 const csurf = require("csurf");
@@ -31,11 +32,12 @@ app.engine("handlebars", hb());
 app.set("view engine", "handlebars");
 app.use(require("cookie-parser")());
 app.disable("x-powered-by");
+/*config:body parser*/
 app.use(
 	require("body-parser").urlencoded({
 		extended: false
 	})
-); // used in POST requests
+); // used in POST requests to read value from forms
 app.use(
 	cookieSession({
 		secret: secret,
@@ -50,7 +52,10 @@ app.use((request, response, next) => {
 app.engine("handlebars", hb({ defaultLayout: "main" }));
 /***********************************************************************/
 app.use(express.static("static"));
-
+/*---------------------------------------------------------------------*/
+/*                             GET Routes                              */
+/*---------------------------------------------------------------------*/
+/*Route for calling home page*/
 app.get("/", function(request, response) {
 	response.render("home", { header: true });
 });
@@ -64,15 +69,19 @@ app.get("/profile", function(request, response) {
 	response.render("profile", { header: false });
 });
 
+/*Route for calling login page*/
 app.get("/login", function(request, response) {
 	response.render("login", { header: true });
 });
 
+/*Route for logout -session is cleared*/
 app.get("/logout", function(request, response) {
 	request.session = null;
 	response.redirect("/");
 });
 
+/*Route for calling petition signing page-checks if already signed */
+/* or user is already registered*/
 app.get("/petition", checkforSigned, checkforUserId, function(
 	request,
 	response
@@ -80,6 +89,8 @@ app.get("/petition", checkforSigned, checkforUserId, function(
 	response.render("petitionMain");
 });
 
+/*Route for calling page once user ha signed petition-checks if already signed */
+/* or user is already registered*/
 app.get("/petition/signed", checkforSigid, checkforUserId, function(
 	request,
 	response,
@@ -101,6 +112,7 @@ app.get("/petition/signed", checkforSigid, checkforUserId, function(
 		});
 });
 
+/*Routes for editing user profile --gets details of registered user in the form*/
 app.get("/profile/edit", function(request, response) {
 	const userId = request.session.userId;
 	console.log("signid", userId);
@@ -115,6 +127,8 @@ app.get("/profile/edit", function(request, response) {
 		});
 });
 
+/*Route for getting list of signers who signed the petition-checks if already signed */
+/* or user is already registered*/
 app.get("/petition/signers", checkforSigid, checkforUserId, function(
 	request,
 	response,
@@ -132,6 +146,7 @@ app.get("/petition/signers", checkforSigid, checkforUserId, function(
 		});
 });
 
+/*Gets the signers in same city based on the city link clicked*/
 app.get("/petition/signers/:city", checkforSigid, checkforUserId, function(
 	request,
 	response
@@ -149,6 +164,8 @@ app.get("/petition/signers/:city", checkforSigid, checkforUserId, function(
 		});
 });
 
+/**************************************************************************/
+/*                                     POST Routes                        */
 /**************************************************************************/
 app.post("/register", (request, response) => {
 	if (
@@ -226,12 +243,18 @@ app.post("/login", (request, response) => {
 /**********************************************************************/
 app.post("/profile", (request, response) => {
 	let url = request.body.homepage;
+	let cityname=request.body.city;
 	if (!url.startsWith("https://") && url.length > 0) {
 		url = "https://" + url;
 	}
+
+	if(cityname.length>0){
+		cityname=firstLetterUCase(cityname);
+	}
+
 	userProfile(
 		request.body.age,
-		request.body.city,
+		cityname,
 		url,
 		request.session.userId
 	)
@@ -266,6 +289,12 @@ app.post("/profile/Edit", (request, response) => {
 	const userId = request.session.userId;
 	let newurl;
 	const { fname, lname, emailid, passwd, age, city, url } = request.body;
+	/*city name change case*/
+	let cityname=city;
+	if(cityname.length>0){
+		cityname=firstLetterUCase(cityname);
+	}
+
 	/*to reload form on error handling*/
 	let formVal = {
             fname: request.body.fname,
@@ -273,9 +302,10 @@ app.post("/profile/Edit", (request, response) => {
             email:request.body.emailid,
 						passwd:request.body.passwd,
 						age:request.body.age,
-						city:request.body.city,
+						city:cityname,
 						url:request.body.url
   };
+	/*check for protocol addition*/
 	if (!url.startsWith("https://") && url.length > 0) {
 		newurl = "https://" + url;
 	} else {
@@ -287,7 +317,7 @@ app.post("/profile/Edit", (request, response) => {
 				/*call function to update with the new hash*/
 				Promise.all([
 					updateUserTable(fname, lname, emailid, userId, hashedpwd),
-					updateUserprofileTable(age, city, newurl, userId)
+					updateUserprofileTable(age, cityname, newurl, userId)
 				])
 					.then(function() {
 						response.redirect("/petition/signed");
@@ -304,7 +334,7 @@ app.post("/profile/Edit", (request, response) => {
 		/*call function to update without pwd*/
 		Promise.all([
 			updateUserTable(fname, lname, emailid, userId),
-			updateUserprofileTable(age, city, newurl, userId)
+			updateUserprofileTable(age, cityname, newurl, userId)
 		])
 			.then(function() {
 				response.redirect("/petition/signed");
@@ -351,6 +381,12 @@ function checkforUserId(request, response, next) {
 	} else {
 		next();
 	}
+}
+/* function is to convert city name to lowercase and makes the first letter to uppercase*/
+function firstLetterUCase(cityname){
+	let camelCasename=cityname.toLowerCase();
+	camelCasename=camelCasename.charAt(0).toUpperCase() + camelCasename.slice(1);
+	return camelCasename;
 }
 /**********************************************************************/
 app.listen(process.env.PORT || 8080, () =>
