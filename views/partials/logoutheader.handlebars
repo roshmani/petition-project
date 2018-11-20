@@ -6,5 +6,10 @@
         <ul class="navbar">
             <li><a href="/logout">Logout</a></li>
         </ul>
+        {{#if signed}}
+            <ul class="navbar">
+                <li><a href="/petition/signed">View Signature</a></li>
+            </ul>
+        {{/if}}
     </div>
 </header>
